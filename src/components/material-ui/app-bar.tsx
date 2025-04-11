@@ -16,10 +16,10 @@ import useAuth from "@/services/auth/use-auth";
 import useAuthActions from "@/services/auth/use-auth-actions";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "@/services/i18n/client";
-import Link from "@/components/link";
+import Link from "@/components/material-ui/link";
 import { RoleEnum } from "@/services/api/types/role";
 import Divider from "@mui/material/Divider";
-import ThemeSwitchButton from "@/components/switch-theme-button";
+import ThemeSwitchButton from "@/components/material-ui/switch-theme-button";
 import { IS_SIGN_UP_ENABLED } from "@/services/auth/config";
 
 function ResponsiveAppBar() {

@@ -6,7 +6,7 @@ import useAuthActions from "@/services/auth/use-auth-actions";
 import useAuthTokens from "@/services/auth/use-auth-tokens";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useState } from "react";
-import { FullPageLoader } from "@/components/full-page-loader";
+import { FullPageLoader } from "@/components/material-ui/full-page-loader";
 import useLanguage from "@/services/i18n/use-language";
 
 export default function GoogleAuth() {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {
-  DatePicker,
-  DateView,
+  DateTimePicker,
+  DateOrTimeView,
   LocalizationProvider,
 } from "@mui/x-date-pickers";
 import {
@@ -13,13 +13,13 @@ import {
 import { ForwardedRef, forwardRef } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import useLanguage from "@/services/i18n/use-language";
-import { getValueByKey } from "@/components/form/date-pickers/helper";
+import { getValueByKey } from "@/components/material-ui/form/date-pickers/helper";
 
 type ValueDateType = Date | null | undefined;
-type DatePickerFieldProps = {
+type DateTimePickerFieldProps = {
   disabled?: boolean;
   className?: string;
-  views?: readonly DateView[] | undefined;
+  views?: readonly DateOrTimeView[];
   minDate?: Date;
   maxDate?: Date;
   autoFocus?: boolean;
@@ -29,17 +29,17 @@ type DatePickerFieldProps = {
   error?: string;
   defaultValue?: ValueDateType;
 };
-const DatePickerInput = forwardRef(DatePickerInputRaw) as never as (
-  props: DatePickerFieldProps & {
+const DateTimePickerInput = forwardRef(DateTimePickerInputRaw) as never as (
+  props: DateTimePickerFieldProps & {
     name: string;
     value: ValueDateType;
     onChange: (value: ValueDateType) => void;
     onBlur: () => void;
   } & { ref?: ForwardedRef<HTMLDivElement | null> }
-) => ReturnType<typeof DatePickerInputRaw>;
+) => ReturnType<typeof DateTimePickerInputRaw>;
 
-function DatePickerInputRaw(
-  props: DatePickerFieldProps & {
+function DateTimePickerInputRaw(
+  props: DateTimePickerFieldProps & {
     name: string;
     value: ValueDateType;
     onChange: (value: ValueDateType) => void;
@@ -54,7 +54,7 @@ function DatePickerInputRaw(
       dateAdapter={AdapterDateFns}
       adapterLocale={getValueByKey(language)}
     >
-      <DatePicker
+      <DateTimePicker
         ref={ref}
         name={props.name}
         label={props.label}
@@ -81,11 +81,11 @@ function DatePickerInputRaw(
     </LocalizationProvider>
   );
 }
-function FormDatePickerInput<
+function FormDateTimePickerInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(
-  props: DatePickerFieldProps &
+  props: DateTimePickerFieldProps &
     Pick<ControllerProps<TFieldValues, TName>, "name" | "defaultValue">
 ) {
   return (
@@ -94,7 +94,7 @@ function FormDatePickerInput<
       defaultValue={props.defaultValue}
       render={({ field, fieldState }) => {
         return (
-          <DatePickerInput
+          <DateTimePickerInput
             {...field}
             defaultValue={props.defaultValue}
             autoFocus={props.autoFocus}
@@ -113,4 +113,4 @@ function FormDatePickerInput<
   );
 }
 
-export default FormDatePickerInput;
+export default FormDateTimePickerInput;

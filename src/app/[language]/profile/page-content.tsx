@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
-import Link from "@/components/link";
+import Link from "@/components/material-ui/link";
 import { useTranslation } from "@/services/i18n/client";
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({

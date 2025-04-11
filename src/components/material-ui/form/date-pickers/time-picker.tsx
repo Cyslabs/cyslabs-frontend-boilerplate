@@ -1,8 +1,9 @@
 import * as React from "react";
 import {
-  DateTimePicker,
-  DateOrTimeView,
   LocalizationProvider,
+  TimePicker,
+  TimeStepOptions,
+  TimeView,
 } from "@mui/x-date-pickers";
 import {
   Controller,
@@ -13,33 +14,36 @@ import {
 import { ForwardedRef, forwardRef } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import useLanguage from "@/services/i18n/use-language";
-import { getValueByKey } from "@/components/form/date-pickers/helper";
+import { getValueByKey } from "@/components/material-ui/form/date-pickers/helper";
 
 type ValueDateType = Date | null | undefined;
-type DateTimePickerFieldProps = {
+type TimePickerFieldProps = {
   disabled?: boolean;
   className?: string;
-  views?: readonly DateOrTimeView[];
-  minDate?: Date;
-  maxDate?: Date;
+  views?: readonly TimeView[] | undefined;
   autoFocus?: boolean;
   readOnly?: boolean;
   label: string;
   testId?: string;
   error?: string;
   defaultValue?: ValueDateType;
+  format?: string;
+  minTime?: Date | undefined;
+  maxTime?: Date | undefined;
+  timeSteps?: TimeStepOptions | undefined;
 };
-const DateTimePickerInput = forwardRef(DateTimePickerInputRaw) as never as (
-  props: DateTimePickerFieldProps & {
+
+const TimePickerInput = forwardRef(TimePickerInputRaw) as never as (
+  props: TimePickerFieldProps & {
     name: string;
     value: ValueDateType;
     onChange: (value: ValueDateType) => void;
     onBlur: () => void;
   } & { ref?: ForwardedRef<HTMLDivElement | null> }
-) => ReturnType<typeof DateTimePickerInputRaw>;
+) => ReturnType<typeof TimePickerInputRaw>;
 
-function DateTimePickerInputRaw(
-  props: DateTimePickerFieldProps & {
+function TimePickerInputRaw(
+  props: TimePickerFieldProps & {
     name: string;
     value: ValueDateType;
     onChange: (value: ValueDateType) => void;
@@ -54,15 +58,15 @@ function DateTimePickerInputRaw(
       dateAdapter={AdapterDateFns}
       adapterLocale={getValueByKey(language)}
     >
-      <DateTimePicker
+      <TimePicker
         ref={ref}
         name={props.name}
         label={props.label}
         value={props.value}
-        onClose={props.onBlur}
         disabled={props.disabled}
         autoFocus={props.autoFocus}
         defaultValue={props.defaultValue}
+        onClose={props.onBlur}
         slotProps={{
           textField: {
             helperText: props.error,
@@ -73,19 +77,21 @@ function DateTimePickerInputRaw(
           },
         }}
         onAccept={props.onChange}
-        minDate={props.minDate}
-        maxDate={props.maxDate}
         views={props.views}
+        format={props.format}
         data-testid={props.testId}
+        minTime={props.minTime}
+        maxTime={props.maxTime}
+        timeSteps={props.timeSteps}
       />
     </LocalizationProvider>
   );
 }
-function FormDateTimePickerInput<
+function FormTimePickerInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(
-  props: DateTimePickerFieldProps &
+  props: TimePickerFieldProps &
     Pick<ControllerProps<TFieldValues, TName>, "name" | "defaultValue">
 ) {
   return (
@@ -94,7 +100,7 @@ function FormDateTimePickerInput<
       defaultValue={props.defaultValue}
       render={({ field, fieldState }) => {
         return (
-          <DateTimePickerInput
+          <TimePickerInput
             {...field}
             defaultValue={props.defaultValue}
             autoFocus={props.autoFocus}
@@ -103,9 +109,11 @@ function FormDateTimePickerInput<
             readOnly={props.readOnly}
             views={props.views}
             testId={props.testId}
-            minDate={props.minDate}
-            maxDate={props.maxDate}
+            format={props.format}
             error={fieldState.error?.message}
+            minTime={props.minTime}
+            maxTime={props.maxTime}
+            timeSteps={props.timeSteps}
           />
         );
       }}
@@ -113,4 +121,4 @@ function FormDateTimePickerInput<
   );
 }
 
-export default FormDateTimePickerInput;
+export default FormTimePickerInput;

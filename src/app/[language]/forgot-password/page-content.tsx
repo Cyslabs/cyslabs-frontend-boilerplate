@@ -6,7 +6,7 @@ import { useAuthForgotPasswordService } from "@/services/api/services/auth";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
-import FormTextInput from "@/components/form/text-input/form-text-input";
+import FormTextInput from "@/components/material-ui/form/text-input/form-text-input";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSnackbar } from "@/hooks/use-snackbar";

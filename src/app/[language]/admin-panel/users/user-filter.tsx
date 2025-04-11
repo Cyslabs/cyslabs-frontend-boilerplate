@@ -1,6 +1,6 @@
 "use client";
 
-import FormMultipleSelectInput from "@/components/form/multiple-select/form-multiple-select";
+import FormMultipleSelectInput from "@/components/material-ui/form/multiple-select/form-multiple-select";
 import { Role, RoleEnum } from "@/services/api/types/role";
 import { useTranslation } from "@/services/i18n/client";
 import Button from "@mui/material/Button";

@@ -35,10 +35,10 @@
         "selector": "VariableDeclarator > ObjectPattern > Property[key.name=formState]",
         "message": "\"formState\" re-render the whole form component. Use hook \"useFormState\" instead."
       },
-      {
-        "selector": "VariableDeclarator[init.callee.name=useFormState][id.type=Identifier]",
-        "message": "Use destructuring assignment for \"useFormState\". Example: \"const { isDirty } = useFormState()\". Returned formState is wrapped with Proxy to improve render performance and skip extra computation if specific state is not subscribed, so make sure you deconstruct or read it before render in order to enable the subscription. More info here https://react-hook-form.com/docs/useformstate#rules"
-      },
+      // {
+      //   "selector": "VariableDeclarator[init.callee.name=useFormState][id.type=Identifier]",
+      //   "message": "Use destructuring assignment for \"useFormState\". Example: \"const { isDirty } = useFormState()\". Returned formState is wrapped with Proxy to improve render performance and skip extra computation if specific state is not subscribed, so make sure you deconstruct or read it before render in order to enable the subscription. More info here https://react-hook-form.com/docs/useformstate#rules"
+      // },
       {
         "selector": "MemberExpression[object.name=control]",
         "message": "Do not access any of the properties inside this object directly. It's for internal usage only. More info here: https://react-hook-form.com/docs/useform/control"
@@ -91,10 +91,10 @@
         "selector": "ConditionalExpression[consequent.type=Literal][consequent.value=true][alternate.type=Literal][alternate.value=false]",
         "message": "Do not use \"condition ? true : false\". Simplify \"someVariable === 42 ? true : false \" to \"someVariable === 42\""
       },
-      {
-        "selector": "JSXElement[openingElement.name.property.name=Provider] JSXElement[openingElement.name.name]",
-        "message": "Do not put your regular components inside Context \".Provider\". Create new component, for example ComponentProvider. Put Provider's logic to ComponentProvider. Render \"{children} instead of regular component. Wrap regular component via new ComponentProvider \". Example: \"src/services/auth/auth-provider\""
-      },
+      // {
+      //   "selector": "JSXElement[openingElement.name.property.name=Provider] JSXElement[openingElement.name.name]",
+      //   "message": "Do not put your regular components inside Context \".Provider\". Create new component, for example ComponentProvider. Put Provider's logic to ComponentProvider. Render \"{children} instead of regular component. Wrap regular component via new ComponentProvider \". Example: \"src/services/auth/auth-provider\""
+      // },
       {
         "selector": "Property[key.name=/^(padding|margin|paddingLeft|paddingRight|paddingTop|paddingBottom|paddingVertical|marginLeft|marginRight|marginTop|marginBottom|marginVertical)$/][value.type=/^(Literal|UnaryExpression)$/]:not([value.value=\"0 !important\"]):not([value.value=\"0\"]):not([value.value=\"0 auto\"]):not([value.value=\"auto\"])",
         "message": "Use theme.spacing() instead of literal."

@@ -1,4 +1,4 @@
-import ResponsiveAppBar from "@/components/app-bar";
+import ResponsiveAppBar from "@/components/material-ui/app-bar";
 import AuthProvider from "@/services/auth/auth-provider";
 import "../globals.css";
 import "@fontsource/roboto/300.css";
@@ -10,18 +10,18 @@ import { dir } from "i18next";
 import "@/services/i18n/config";
 import { languages } from "@/services/i18n/config";
 import type { Metadata } from "next";
-import ToastContainer from "@/components/snackbar-provider";
+import ToastContainer from "@/components/material-ui/snackbar-provider";
 import { getServerTranslation } from "@/services/i18n";
 import StoreLanguageProvider from "@/services/i18n/store-language-provider";
-import ThemeProvider from "@/components/theme/theme-provider";
+import ThemeProvider from "@/components/material-ui/theme/theme-provider";
 import LeavePageProvider from "@/services/leave-page/leave-page-provider";
 import QueryClientProvider from "@/services/react-query/query-client-provider";
 import queryClient from "@/services/react-query/query-client";
 import ReactQueryDevtools from "@/services/react-query/react-query-devtools";
 import GoogleAuthProvider from "@/services/social-auth/google/google-auth-provider";
 import FacebookAuthProvider from "@/services/social-auth/facebook/facebook-auth-provider";
-import ConfirmDialogProvider from "@/components/confirm-dialog/confirm-dialog-provider";
-import InitColorSchemeScript from "@/components/theme/init-color-scheme-script";
+import ConfirmDialogProvider from "@/components/material-ui/confirm-dialog/confirm-dialog-provider";
+import InitColorSchemeScript from "@/components/material-ui/theme/init-color-scheme-script";
 
 type Props = {
   params: Promise<{ language: string }>;
