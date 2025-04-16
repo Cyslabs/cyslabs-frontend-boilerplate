@@ -9,6 +9,7 @@ import { FullPageLoader } from "@/components/material-ui/full-page-loader";
 import Button from "@mui/material/Button";
 import useFacebookAuth from "./use-facebook-auth";
 import { useTranslation } from "@/services/i18n/client";
+import FacebookOutlined from "@mui/icons-material/FacebookOutlined";
 
 export default function FacebookAuth() {
   const { setUser } = useAuthActions();
@@ -44,7 +45,13 @@ export default function FacebookAuth() {
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={onLogin}>
+      <Button
+        variant="contained"
+        onClick={onLogin}
+        size="medium"
+        startIcon={<FacebookOutlined />}
+        fullWidth
+      >
         {t("common:auth.facebook.action")}
       </Button>
       <FullPageLoader isLoading={isLoading} />

@@ -21,6 +21,12 @@ import { Separator } from "@/components/shadcn-ui/separator";
 import { Eye, EyeOff } from "lucide-react";
 // eslint-disable-next-line no-restricted-imports
 import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/shadcn-ui/card";
 
 type SignInFormData = {
   email: string;
@@ -113,92 +119,101 @@ function Form() {
   });
 
   return (
-    <FormProvider {...methods}>
-      <form
-        onSubmit={onSubmit}
-        className="max-w-sm w-full mx-auto space-y-4 mt-10 p-4 border rounded-lg shadow-sm"
-      >
-        <h1 className="text-xl font-semibold">{t("sign-in:title")}</h1>
+    <div className="flex justify-center p-4 mt-10">
+      <FormProvider {...methods}>
+        <Card className="w-full max-w-lg">
+          <CardContent>
+            <CardTitle className="text-2xl mb-3">
+              {t("sign-in:title")}
+            </CardTitle>
+            <CardDescription>
+              Enter your email below to login to your account
+            </CardDescription>
+            <form onSubmit={onSubmit} className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">{t("sign-in:inputs.email.label")}</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Type your email"
+                  {...methods.register("email")}
+                  autoFocus
+                />
+                {errors.email?.message && (
+                  <p className="text-sm text-red-500">
+                    {errors.email.message.toString()}
+                  </p>
+                )}
+              </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="email">{t("sign-in:inputs.email.label")}</Label>
-          <Input
-            id="email"
-            type="email"
-            {...methods.register("email")}
-            autoFocus
-          />
-          {errors.email?.type === "required" && (
-            <p className="text-base text-red-500">
-              {errors.email.message?.toString()}
-            </p>
-          )}
-        </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">
+                    {t("sign-in:inputs.password.label")}
+                  </Label>
+                  <Link
+                    href="/forgot-password"
+                    className="text-sm text-muted-foreground hover:underline"
+                  >
+                    {t("sign-in:actions.forgotPassword")}
+                  </Link>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    {...methods.register("password")}
+                  />
+                  <Button
+                    type="button"
+                    onClick={toggleShowPassword}
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 p-2"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5 text-gray-600" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-gray-600" />
+                    )}
+                  </Button>
+                </div>
+                {errors.password?.message && (
+                  <p className="text-sm text-red-500">
+                    {errors.password.message.toString()}
+                  </p>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormActions />
 
-        <div className="space-y-2">
-          <Label htmlFor="password">{t("sign-in:inputs.password.label")}</Label>
-          <div className="relative">
-            <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              {...methods.register("password")}
-            />
-            <Button
-              type="button"
-              onClick={toggleShowPassword}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-200"
-            >
-              {showPassword ? (
-                <EyeOff className="text-gray-600 hover:text-gray-800" />
-              ) : (
-                <Eye className="text-gray-600 hover:text-gray-800" />
+                {IS_SIGN_UP_ENABLED && (
+                  <div className="text-center">
+                    <Link href="/sign-up">
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        data-testid="create-account"
+                      >
+                        {t("sign-in:actions.createAccount")}
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {[isGoogleAuthEnabled, isFacebookAuthEnabled].some(Boolean) && (
+                <>
+                  <Separator className="my-4" />
+                  <div className="text-center text-sm text-muted-foreground mb-2 w-full">
+                    {t("sign-in:or")}
+                  </div>
+                  <SocialAuth />
+                </>
               )}
-            </Button>
-          </div>
-          {errors.password && (
-            <p className="text-base text-red-500">
-              {errors.password.message?.toString()}
-            </p>
-          )}
-        </div>
-
-        <div className="text-right">
-          <Link
-            href="/forgot-password"
-            className="text-sm text-muted-foreground hover:underline"
-            data-testid="forgot-password"
-          >
-            {t("sign-in:actions.forgotPassword")}
-          </Link>
-        </div>
-        <div className="flex flex-row gap-2 items-center mt-4">
-          <FormActions />
-
-          {IS_SIGN_UP_ENABLED && (
-            <div className="text-center">
-              <Link href="/sign-up">
-                <Button
-                  variant="outline"
-                  className="cursor-pointer"
-                  data-testid="create-account"
-                >
-                  {t("sign-in:actions.createAccount")}
-                </Button>
-              </Link>
-            </div>
-          )}
-        </div>
-        {[isGoogleAuthEnabled, isFacebookAuthEnabled].some(Boolean) && (
-          <>
-            <Separator />
-            <div className="text-center text-sm text-muted-foreground mb-2">
-              {t("sign-in:or")}
-            </div>
-            <SocialAuth />
-          </>
-        )}
-      </form>
-    </FormProvider>
+            </form>
+          </CardContent>
+        </Card>
+      </FormProvider>
+    </div>
   );
 }
 

@@ -74,6 +74,8 @@ function FormActions() {
       variant="default"
       color="primary"
       type="submit"
+      size={"lg"}
+      className="cursor-pointer"
       disabled={isSubmitting}
       data-testid="sign-up-submit"
     >
@@ -153,34 +155,43 @@ function Form() {
     <FormProvider {...methods}>
       <form
         onSubmit={onSubmit}
-        className="max-w-sm w-full mx-auto space-y-4 mt-10 p-4 border rounded-lg shadow-sm"
+        className="max-w-lg w-full mx-auto space-y-4 mt-10 p-4 border rounded-lg shadow-sm"
       >
         <h1 className="text-xl font-semibold">{t("sign-up:title")}</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="firstName">
+              {t("sign-up:inputs.firstName.label")}
+            </Label>
+            <Input
+              id="firstName"
+              type="text"
+              placeholder="Type your first name"
+              {...methods.register("firstName")}
+            />
+            {errors.firstName && (
+              <p className="text-sm text-red-500">
+                {errors.firstName.message?.toString()}
+              </p>
+            )}
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="firstName">
-            {t("sign-up:inputs.firstName.label")}
-          </Label>
-          <Input
-            id="firstName"
-            type="text"
-            {...methods.register("firstName")}
-          />
-          {errors.firstName && (
-            <p className="text-sm text-red-500">
-              {errors.firstName.message?.toString()}
-            </p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="lastName">{t("sign-up:inputs.lastName.label")}</Label>
-          <Input id="lastName" type="text" {...methods.register("lastName")} />
-          {errors.lastName && (
-            <p className="text-sm text-red-500">
-              {errors.lastName.message?.toString()}
-            </p>
-          )}
+          <div className="space-y-2">
+            <Label htmlFor="lastName">
+              {t("sign-up:inputs.lastName.label")}
+            </Label>
+            <Input
+              id="lastName"
+              type="text"
+              placeholder="Type your last name"
+              {...methods.register("lastName")}
+            />
+            {errors.lastName && (
+              <p className="text-sm text-red-500">
+                {errors.lastName.message?.toString()}
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="space-y-2">
@@ -188,6 +199,7 @@ function Form() {
           <Input
             id="email"
             type="email"
+            placeholder="Type your email"
             {...methods.register("email")}
             autoFocus
           />
@@ -255,7 +267,7 @@ function Form() {
           )}
         </div>
 
-        <div className="flex flex-row gap-2 items-center mt-4">
+        <div className="grid grid-cols-2 gap-4">
           <FormActions />
 
           {IS_SIGN_IN_ENABLED && (
@@ -263,6 +275,7 @@ function Form() {
               <Link href="/sign-in">
                 <Button
                   variant="outline"
+                  size={"lg"}
                   className="cursor-pointer"
                   data-testid="sign-in"
                 >
