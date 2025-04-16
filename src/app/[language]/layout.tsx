@@ -1,4 +1,5 @@
-import ResponsiveAppBar from "@/components/material-ui/app-bar";
+// import ResponsiveAppBar from "@/components/material-ui/app-bar";
+import NewNavBar from "@/components/nav-bar/nav-bar";
 import AuthProvider from "@/services/auth/auth-provider";
 import "../globals.css";
 import "@fontsource/roboto/300.css";
@@ -65,7 +66,7 @@ export default async function RootLayout(props: {
                   <GoogleAuthProvider>
                     <FacebookAuthProvider>
                       <LeavePageProvider>
-                        <ResponsiveAppBar />
+                        <NewNavBar />
                         {children}
                         <ToastContainer
                           position="bottom-left"
