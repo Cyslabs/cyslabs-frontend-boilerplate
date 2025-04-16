@@ -29,7 +29,7 @@ import {
   SheetTitle,
 } from "@/components/shadcn-ui/sheet";
 import { Separator } from "@/components/shadcn-ui/separator";
-import ThemeSwitchButton from "@/components/nav-bar/theme-switch";
+import ThemeSwitchButton from "@/components/shadcn-ui/theme-switch";
 
 function NewNavBar() {
   const { t } = useTranslation("common");

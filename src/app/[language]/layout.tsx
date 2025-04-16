@@ -1,5 +1,5 @@
 // import ResponsiveAppBar from "@/components/material-ui/app-bar";
-import NewNavBar from "@/components/nav-bar/nav-bar";
+import NewNavBar from "@/components/shadcn-ui/nav-bar";
 import AuthProvider from "@/services/auth/auth-provider";
 import "../globals.css";
 import "@fontsource/roboto/300.css";
