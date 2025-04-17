@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/shadcn-ui/button";
 import { Input } from "@/components/shadcn-ui/input";
-import { Checkbox } from "@/components/shadcn-ui/checkbox";
 import { Label } from "@/components/shadcn-ui/label";
 // eslint-disable-next-line no-restricted-imports
 import Link from "next/link";
@@ -19,13 +18,18 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import { useTranslation } from "@/services/i18n/client";
-import SocialAuth from "@/services/social-auth/social-auth";
 import { isGoogleAuthEnabled } from "@/services/social-auth/google/google-config";
-import { isFacebookAuthEnabled } from "@/services/social-auth/facebook/facebook-config";
 import { useState } from "react";
-import { Separator } from "@/components/shadcn-ui/separator";
-
-const IS_SIGN_IN_ENABLED = true;
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/shadcn-ui/card";
+import { IS_SIGN_UP_ENABLED } from "@/services/auth/config";
+import GoogleAuth from "@/services/social-auth/google/google-auth";
+import { Checkbox } from "@/components/shadcn-ui/checkbox";
 
 type TPolicy = {
   id: string;
@@ -37,6 +41,7 @@ type SignUpFormData = {
   lastName: string;
   email: string;
   password: string;
+  confirmPassword: string;
   policy: TPolicy[];
 };
 
@@ -58,6 +63,10 @@ const useValidationSchema = () => {
       .string()
       .min(6, t("sign-up:inputs.password.validation.min"))
       .required(t("sign-up:inputs.password.validation.required")),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password")], "Passwords do not match")
+      .required("Please confirm your password"),
     policy: yup
       .array()
       .min(1, t("sign-up:inputs.policy.validation.required"))
@@ -91,7 +100,6 @@ function Form() {
   const fetchAuthSignUp = useAuthSignUpService();
   const { t } = useTranslation("sign-up");
   const validationSchema = useValidationSchema();
-
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = () => setShowPassword((prev) => !prev);
 
@@ -106,6 +114,7 @@ function Form() {
       lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
       policy: [],
     },
   });
@@ -152,151 +161,164 @@ function Form() {
   });
 
   return (
-    <FormProvider {...methods}>
-      <form
-        onSubmit={onSubmit}
-        className="max-w-lg w-full mx-auto space-y-4 mt-10 p-4 border rounded-lg shadow-sm"
-      >
-        <h1 className="text-xl font-semibold">{t("sign-up:title")}</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="firstName">
-              {t("sign-up:inputs.firstName.label")}
-            </Label>
-            <Input
-              id="firstName"
-              type="text"
-              placeholder="Type your first name"
-              {...methods.register("firstName")}
-            />
-            {errors.firstName && (
-              <p className="text-sm text-red-500">
-                {errors.firstName.message?.toString()}
-              </p>
-            )}
-          </div>
+    <div className="flex justify-center p-4 mt-10">
+      <FormProvider {...methods}>
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-2xl">{t("sign-up:title")}</CardTitle>
+            <CardDescription>
+              Enter your email below to login to your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={onSubmit} className="space-y-4">
+              <div className="flex flex-col gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">Full Name</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="Type your name"
+                    {...methods.register("firstName")}
+                  />
+                  {errors.firstName && (
+                    <p className="text-sm text-red-500">
+                      {errors.firstName.message?.toString()}
+                    </p>
+                  )}
+                </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="lastName">
-              {t("sign-up:inputs.lastName.label")}
-            </Label>
-            <Input
-              id="lastName"
-              type="text"
-              placeholder="Type your last name"
-              {...methods.register("lastName")}
-            />
-            {errors.lastName && (
-              <p className="text-sm text-red-500">
-                {errors.lastName.message?.toString()}
-              </p>
-            )}
-          </div>
-        </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="email">
+                    {t("sign-up:inputs.email.label")}
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    {...methods.register("email")}
+                    autoFocus
+                  />
+                  {errors.email?.message && (
+                    <p className="text-sm text-red-500">
+                      {errors.email.message.toString()}
+                    </p>
+                  )}
+                </div>
+                <div className="grid gap-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">
+                      {t("sign-up:inputs.password.label")}
+                    </Label>
+                  </div>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      {...methods.register("password")}
+                    />
+                    <Button
+                      type="button"
+                      onClick={toggleShowPassword}
+                      className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 p-2"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5 text-gray-600" />
+                      ) : (
+                        <Eye className="h-5 w-5 text-gray-600" />
+                      )}
+                    </Button>
+                  </div>
+                  {errors.password?.message && (
+                    <p className="text-sm text-red-500">
+                      {errors.password.message.toString()}
+                    </p>
+                  )}
+                </div>
+                <div className="grid gap-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  </div>
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      type={showPassword ? "text" : "password"}
+                      {...methods.register("confirmPassword")}
+                    />
+                    <Button
+                      type="button"
+                      onClick={toggleShowPassword}
+                      className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 p-2"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5 text-gray-600" />
+                      ) : (
+                        <Eye className="h-5 w-5 text-gray-600" />
+                      )}
+                    </Button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="text-sm text-red-500">
+                      {errors.confirmPassword.message?.toString()}
+                    </p>
+                  )}
+                </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="email">{t("sign-up:inputs.email.label")}</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="Type your email"
-            {...methods.register("email")}
-            autoFocus
-          />
-          {errors.email?.type === "required" && (
-            <p className="text-sm text-red-500">
-              {errors.email.message?.toString()}
-            </p>
-          )}
-        </div>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="policy"
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          methods.setValue("policy", policyOptions);
+                        } else {
+                          methods.setValue("policy", []);
+                        }
+                      }}
+                    />
+                    <Label htmlFor="policy">
+                      {t("sign-up:inputs.policy.agreement")}
+                      <Link
+                        href="/privacy-policy"
+                        target="_blank"
+                        className="text-blue-600 hover:underline"
+                      >
+                        {t("sign-up:inputs.policy.label")}
+                      </Link>
+                    </Label>
+                  </div>
+                  {errors.policy && (
+                    <p className="text-sm text-red-500">
+                      {t("sign-up:inputs.policy.validation.required")}
+                    </p>
+                  )}
+                </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="password">{t("sign-up:inputs.password.label")}</Label>
-          <div className="relative">
-            <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              {...methods.register("password")}
-            />
-            <Button
-              type="button"
-              onClick={toggleShowPassword}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-200"
-            >
-              {showPassword ? (
-                <EyeOff className="text-gray-600 hover:text-gray-800" />
-              ) : (
-                <Eye className="text-gray-600 hover:text-gray-800" />
-              )}
-            </Button>
-          </div>
-          {errors.password && (
-            <p className="text-sm text-red-500">
-              {errors.password.message?.toString()}
-            </p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="policy"
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  methods.setValue("policy", policyOptions);
-                } else {
-                  methods.setValue("policy", []);
-                }
-              }}
-            />
-            <Label htmlFor="policy">
-              {t("sign-up:inputs.policy.agreement")}
-              <Link
-                href="/privacy-policy"
-                target="_blank"
-                className="text-blue-600 hover:underline"
-              >
-                {t("sign-up:inputs.policy.label")}
-              </Link>
-            </Label>
-          </div>
-          {errors.policy && (
-            <p className="text-sm text-red-500">
-              {t("sign-up:inputs.policy.validation.required")}
-            </p>
-          )}
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <FormActions />
-
-          {IS_SIGN_IN_ENABLED && (
-            <div className="text-center">
-              <Link href="/sign-in">
-                <Button
-                  variant="outline"
-                  size={"lg"}
-                  className="cursor-pointer"
-                  data-testid="sign-in"
-                >
-                  {t("sign-up:actions.accountAlreadyExists")}
-                </Button>
-              </Link>
-            </div>
-          )}
-        </div>
-
-        {[isGoogleAuthEnabled, isFacebookAuthEnabled].some(Boolean) && (
-          <>
-            <Separator />
-            <div className="text-center text-sm text-muted-foreground mb-2">
-              {t("sign-up:or")}
-            </div>
-            <SocialAuth />
-          </>
-        )}
-      </form>
-    </FormProvider>
+                <FormActions />
+                {[isGoogleAuthEnabled].some(Boolean) && (
+                  <div className="w-full">
+                    <GoogleAuth />
+                  </div>
+                )}
+              </div>
+              <div className="mt-4 text-center text-sm">
+                {IS_SIGN_UP_ENABLED && (
+                  <div className="text-center">
+                    Already have an account{" "}
+                    <Link
+                      href="/sign-in"
+                      className="underline underline-offset-4"
+                    >
+                      Sign in
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </FormProvider>
+    </div>
   );
 }
 
