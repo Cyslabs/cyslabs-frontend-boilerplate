@@ -11,8 +11,8 @@ import useLanguage from "@/services/i18n/use-language";
 
 const getGoogleWidth = () => {
   const width = window.innerWidth;
-  if (width < 300) return 200;
-  if (width < 500) return 330;
+  if (width <= 415) return width - 82;
+  if (width < 450) return 333; //415->333 414 -
   return 335;
 };
 
