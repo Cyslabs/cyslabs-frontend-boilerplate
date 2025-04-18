@@ -167,7 +167,7 @@ function Form() {
           <CardHeader>
             <CardTitle className="text-2xl">{t("sign-up:title")}</CardTitle>
             <CardDescription>
-              Enter your email below to login to your account
+              Enter your email below to sign up for an account
             </CardDescription>
           </CardHeader>
           <CardContent>
