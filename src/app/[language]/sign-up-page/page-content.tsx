@@ -28,8 +28,9 @@ import {
   CardTitle,
 } from "@/components/shadcn-ui/card";
 import { IS_SIGN_UP_ENABLED } from "@/services/auth/config";
-import GoogleAuth from "@/services/social-auth/google/google-auth";
+// import GoogleAuth from "@/services/social-auth/google/google-auth";
 import { Checkbox } from "@/components/shadcn-ui/checkbox";
+import GoogleAuthWrapper from "@/services/social-auth/google/google-auth-wrapper";
 
 type TPolicy = {
   id: string;
@@ -167,7 +168,7 @@ function Form() {
           <CardHeader>
             <CardTitle className="text-2xl">{t("sign-up:title")}</CardTitle>
             <CardDescription>
-              Enter your email below to sign up for an account
+              Enter your email below to login to your account
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -297,7 +298,7 @@ function Form() {
                 <FormActions />
                 {[isGoogleAuthEnabled].some(Boolean) && (
                   <div className="w-full">
-                    <GoogleAuth />
+                    <GoogleAuthWrapper type="Sign up with google" />
                   </div>
                 )}
               </div>
