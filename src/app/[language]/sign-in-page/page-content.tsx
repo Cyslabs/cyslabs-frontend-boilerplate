@@ -25,7 +25,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn-ui/card";
-import GoogleAuth from "@/services/social-auth/google/google-auth";
+// import GoogleAuth from "@/services/social-auth/google/google-auth";
+import GoogleAuthWrapper from "@/services/social-auth/google/google-auth-wrapper";
 
 type SignInFormData = {
   email: string;
@@ -188,7 +189,7 @@ function Form() {
                 <FormActions />
                 {[isGoogleAuthEnabled].some(Boolean) && (
                   <div className="w-full">
-                    <GoogleAuth />
+                    <GoogleAuthWrapper type="Login with Google" />
                   </div>
                 )}
               </div>
