@@ -4,11 +4,13 @@ import { useAuthGoogleLoginService } from "@/services/api/services/auth";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import useAuthActions from "@/services/auth/use-auth-actions";
 import useAuthTokens from "@/services/auth/use-auth-tokens";
-import { type CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import { useEffect, useState } from "react";
+import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
+import { useEffect, useState, useRef } from "react";
 import { FullPageLoader } from "@/components/material-ui/full-page-loader";
 import useLanguage from "@/services/i18n/use-language";
-
+type GoogleAuthWrapperProps = {
+  type?: string; // nếu không bắt buộc truyền
+};
 const getGoogleWidth = () => {
   const width = window.innerWidth;
   if (width <= 415) return width - 82;
@@ -16,13 +18,14 @@ const getGoogleWidth = () => {
   return 335;
 };
 
-export default function GoogleAuth() {
+export default function GoogleAuthWrapper({ type }: GoogleAuthWrapperProps) {
   const [googleWidth, setGoogleWidth] = useState(getGoogleWidth());
   const { setUser } = useAuthActions();
   const { setTokensInfo } = useAuthTokens();
   const authGoogleLoginService = useAuthGoogleLoginService();
   const language = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
+  const googleButtonRef = useRef<HTMLDivElement>(null);
 
   const onSuccess = async (tokenResponse: CredentialResponse) => {
     if (!tokenResponse.credential) return;
@@ -50,28 +53,42 @@ export default function GoogleAuth() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  return (
-    <div className="google-auth-wrapper">
-      <GoogleLogin
-        onSuccess={onSuccess}
-        locale={language}
-        theme="outline"
-        shape="rectangular"
-        text="signin_with" // Changed from "signin_with" to "continue_with"
-        width={googleWidth}
-        type="standard"
-      />
-      <FullPageLoader isLoading={isLoading} />
+  // Function to programmatically click the Google button
+  const triggerGoogleLogin = () => {
+    if (googleButtonRef.current) {
+      const googleDiv = googleButtonRef.current.querySelector(
+        "div.nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb"
+      );
+      if (googleDiv) {
+        (googleDiv as HTMLDivElement).click();
+      }
+    }
+  };
 
-      {/* Add custom CSS to style the button */}
-      <style jsx global>{`
-        .google-auth-wrapper .nsm7Bb-HzV7m-LgbsSe {
-          border-radius: 4px !important;
-          box-shadow: none !important;
-          font-family:
-            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-        }
-      `}</style>
-    </div>
+  return (
+    <>
+      {/* Custom button that matches your design */}
+      <button
+        type="button"
+        onClick={triggerGoogleLogin}
+        className="w-full py-2 px-4 border border-gray-300 rounded-md bg-white text-black font-normal text-center hover:bg-gray-50 transition-all"
+      >
+        {type}
+      </button>
+
+      {/* Hidden original Google button */}
+      <div ref={googleButtonRef} className="hidden">
+        <GoogleLogin
+          onSuccess={onSuccess}
+          locale={language}
+          theme="outline"
+          shape="rectangular"
+          text="continue_with" // Changed from "signin_with" to "continue_with"
+          width={googleWidth}
+        />
+      </div>
+
+      <FullPageLoader isLoading={isLoading} />
+    </>
   );
 }
